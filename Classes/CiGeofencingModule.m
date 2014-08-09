@@ -231,7 +231,8 @@ KrollCallback * _callback;
 
 -(void)stopGeoFencing:(id)args
 {
-  for(CLRegion *geofence in geofences) {
+  /* for(CLRegion *geofence in geofences) { */
+  for(CLRegion *geofence in [_locationManager monitoredRegions]) {
     NSLog(@"Number of geofences here: %i", [[_locationManager monitoredRegions] count]);
     [_locationManager stopMonitoringForRegion:geofence];
   }
