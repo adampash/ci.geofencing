@@ -136,6 +136,21 @@ KrollCallback * _callback;
 
 }
 
+
+- (void) checkStateForRegions:(NSMutableArray*)geofences {
+  for(CLRegion *geofence in geofences) {
+    [_locationManager requestStateForRegion:geofence];
+  }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region {
+  if (state == CLRegionStateInside) {
+    NSMutableDictionary *event = [NSMutableDictionary dictionary];
+    [event setObject:region.identifier forKey:@"identifier"];
+    /* [self _fireEventToListener:@"entered_region" withObject:event listener:_callback thisObject:nil]; */
+  }
+}
+
 - (NSArray*) buildGeofenceData:(NSArray *)regionArray {
     //NSString* plistPath = [[NSBundle mainBundle] pathForResource:@"regions" ofType:@"plist"];
     //_regionArray = [NSArray arrayWithContentsOfFile:plistPath];
@@ -222,6 +237,7 @@ KrollCallback * _callback;
   // create array from data passed in
   geofences = [self buildGeofenceData:_regions];
   [self initializeRegionMonitoring:geofences];
+  /* [self checkStateForRegions:geofences]; */
 
   // remember to clean up later
   [geofences retain];
